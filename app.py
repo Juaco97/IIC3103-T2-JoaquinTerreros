@@ -324,7 +324,7 @@ def albums():
         
 
 
-@app.route("/albums/<string:album_id>/tracks", methods=['POST'])
+@app.route("/albums/<string:album_id>/tracks", methods=['POST', 'GET'])
 def albums_album_id_tracks(album_id):
     #Analizo si el método existe
     if request.method == "POST":
@@ -385,28 +385,27 @@ def albums_album_id_tracks(album_id):
     #######################
 
     elif request.method == "GET":
-        existe = db.session.query(Artista).filter(Artista.id == artist_id).all()
-        #Si el artista existe, procedo a buscar sus albums
-        if len(existe)>0:
-            consulta_albums = db.session.query(Album).filter(Album.artist_id == artist_id).all()
-            consulta_canciones = db.session.query(Cancion).filter(Cancion.album_id == artist_id).all() 
+        existe = db.session.query(Album).filter(Album.id == album_id).all()
+        #El artista sí existe y entrego sus canciones
+        if len(existe) > 0:
+            consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
             respuesta = []
-            for album in consulta_albums:
-                for cancion in consulta_canciones:
-                    if cancion.album_id == album.id:
-                        respuesta.append({
-                            "id": album.id,
-                            "artist_id": artist_id,
-                            "name": album.name,
-                            "genre": album.genre,
-                            "artist": album.artist,
-                            "tracks": album.tracks,
-                            "self": album.self_
-                            })
+            for cancion in consulta_canciones:
+                if cancion.album_id == album_id:
+                    respuesta.append({
+                        "id": cancion.id,
+                        "album_id": cancion.album_id,
+                        "name": cancion.name,
+                        "duration": cancion.duration,
+                        "times_played": cancion.artist,
+                        "artist": cancion.artist,
+                        "album": cancion.album,
+                        "self": cancion.self_
+                        })
             estatus = jsonify(respuesta)
             estatus.status_code = 200
-            return estatus
-        #Si el artista no existe, debo arrojar error 404
+            return estatus           
+        #El artista no existe 
         else:
             respuesta = jsonify({})
             respuesta.status_code = 404
@@ -460,23 +459,22 @@ def tracks():
 def albums_album_id(album_id):
     #En caso de que sí exista el método GET
     if request.method == "GET":
-        consulta_albums = db.session.query(Album).all()
-        for album in consulta_albums:
-            #Si existe el album buscado
-            if album.id == album_id:
-                respuesta = []
-                respuesta.append({
-                    "id": album.id,
-                    "artist_id": album.artist_id,
-                    "name": album.name,
-                    "genre": album.genre,
-                    "artist": album.artist,
-                    "tracks": album.tracks,
-                    "self": album.self_
-                    })
-                estatus = jsonify(respuesta)
-                estatus.status_code = 200
-                return estatus
+        consulta_albums = db.session.query(Album).filter(Album.id == album_id).all()
+        #Si existe el album buscado
+        if len(consulta_albums)>0:
+            respuesta = []
+            respuesta.append({
+                "id": consulta_albums[0].id,
+                "artist_id": consulta_albums[0].artist_id,
+                "name": consulta_albums[0].name,
+                "genre": consulta_albums[0].genre,
+                "artist": consulta_albums[0].artist,
+                "tracks": consulta_albums[0].tracks,
+                "self": consulta_albums[0].self_
+                })
+            estatus = jsonify(respuesta)
+            estatus.status_code = 200
+            return estatus
 
         #Si no existe el album
         else:
@@ -506,9 +504,6 @@ def albums_album_id(album_id):
         respuesta = jsonify({})
         respuesta.status_code = 405
         return respuesta
-
-
-
 
 
 @app.route("/tracks/<string:track_id>", methods=['GET', 'DELETE'])
@@ -651,15 +646,86 @@ def tracks_track_id_play(track_id):
         respuesta.status_code = 405
         return respuesta
 
+
+@app.route("/artists/<string:artist_id>/tracks", methods=['GET'])
+def artists_artists_id_tracks(artist_id):
+    #En caso de que sí exista el método GET
+    if request.method == "GET":
+        existe = db.session.query(Artista).filter(Artista.id == artist_id).all()
+        #El artista sí existe y entrego sus canciones
+        if len(existe) > 0:
+            consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
+            consulta_albums = db.session.query(Album).filter(Album.artist_id == artist_id).all() #Todas las canciones de la base de datos
+            respuesta = []
+            for album in consulta_albums:
+                for cancion in consulta_canciones:
+                    if cancion.album_id == album.id:
+                        respuesta.append({
+                            "id": cancion.id,
+                            "album_id": cancion.album_id,
+                            "name": cancion.name,
+                            "duration": cancion.duration,
+                            "times_played": cancion.artist,
+                            "artist": cancion.artist,
+                            "album": cancion.album,
+                            "self": cancion.self_
+                            })
+            estatus = jsonify(respuesta)
+            estatus.status_code = 200
+            return estatus           
+        #El artista no existe 
+        else:
+            respuesta = jsonify({})
+            respuesta.status_code = 404
+            return respuesta
+
+    #En caso de que no exista el método solicitado
+    else:
+        respuesta = jsonify({})
+        respuesta.status_code = 405
+        return respuesta
+
+"""
+@app.route("/albums/<string:albums_id>/tracks", methods=['GET'])
+def albums_album_id_tracks(album_id):
+    #En caso de que sí exista el método GET
+    if request.method == "GET":
+        existe = db.session.query(Album).filter(Album.id == album_id).all()
+        #El artista sí existe y entrego sus canciones
+        if len(existe) > 0:
+            consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
+            respuesta = []
+            for cancion in consulta_canciones:
+                if cancion.album_id == album_id:
+                    respuesta.append({
+                        "id": cancion.id,
+                        "album_id": cancion.album_id,
+                        "name": cancion.name,
+                        "duration": cancion.duration,
+                        "times_played": cancion.artist,
+                        "artist": cancion.artist,
+                        "album": cancion.album,
+                        "self": cancion.self_
+                        })
+            estatus = jsonify(respuesta)
+            estatus.status_code = 200
+            return estatus           
+        #El artista no existe 
+        else:
+            respuesta = jsonify({})
+            respuesta.status_code = 404
+            return respuesta
+
+    #En caso de que no exista el método solicitado
+    else:
+        respuesta = jsonify({})
+        respuesta.status_code = 405
+        return respuesta
+"""
+
 #######################
 ## ESTO LO HICE YO ####
 #######################
-
-
-
-
-
-
 
 
 
