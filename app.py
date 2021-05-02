@@ -518,7 +518,7 @@ def tracks_track_id(track_id):
                     "album_id": cancion.album_id,
                     "name": cancion.name,
                     "duration": cancion.duration,
-                    "times_played": cancion.artist,
+                    "times_played": cancion.times_played,
                     "artist": cancion.artist,
                     "album": cancion.album,
                     "self": cancion.self_
@@ -666,7 +666,7 @@ def artists_artists_id_tracks(artist_id):
                             "album_id": cancion.album_id,
                             "name": cancion.name,
                             "duration": cancion.duration,
-                            "times_played": cancion.artist,
+                            "times_played": cancion.times_played,
                             "artist": cancion.artist,
                             "album": cancion.album,
                             "self": cancion.self_
