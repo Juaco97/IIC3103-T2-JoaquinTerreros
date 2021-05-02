@@ -594,7 +594,7 @@ def artists_artist_id_albums_play(artist_id):
         return respuesta
 
 
-@app.route("/albums/<string:album_id>/track/play", methods=['PUT'])
+@app.route("/albums/<string:album_id>/tracks/play", methods=['PUT'])
 def album_album_id_track_play(album_id):
     #En caso de que sí exista el método PUT
     if request.method == "PUT":
@@ -605,35 +605,6 @@ def album_album_id_track_play(album_id):
             consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
             for cancion in consulta_canciones:
                 if cancion.album_id == album_id:
-                    cancion.times_played += 1
-            respuesta = jsonify({})
-            respuesta.status_code = 200
-            return respuesta
-
-        #Si no existe, entonces arrojamos error 404
-        else:
-            respuesta = jsonify({})
-            respuesta.status_code = 404
-            return respuesta
-    
-    #En caso de que no exista el método solicitado
-    else:
-        respuesta = jsonify({})
-        respuesta.status_code = 405
-        return respuesta
-
-
-@app.route("/tracks/<string:track_id>/play", methods=['PUT'])
-def tracks_track_id_play(track_id):
-    #En caso de que sí exista el método PUT
-    if request.method == "PUT":
-        #Verificamos primero si la cancion existe
-        existe = db.session.query(Cancion).filter(Cancion.id == track_id).all()
-        #Si existe, entonces reproducimos su canción
-        if len(existe) > 0:
-            consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
-            for cancion in consulta_canciones:
-                if cancion.id == track_id:
                     cancion.times_played += 1
             respuesta = jsonify({})
             respuesta.status_code = 200
