@@ -198,7 +198,7 @@ def artists_artists_id_albums(artist_id):
                         "tracks": album.tracks,
                         "self": album.self_
                     })
-                    respuesta.status_code = 422
+                    respuesta.status_code = 409
                     return respuesta
                 #Si el album no existe, la creo y la muestro
                 else:
@@ -219,7 +219,7 @@ def artists_artists_id_albums(artist_id):
             #Si no existe, arrojo error
             else:
                 respuesta = jsonify({})
-                respuesta.status_code = 409
+                respuesta.status_code = 422
                 return respuesta
         else:
             # Se levanta un error que dice que los datos entregados no son los correctos
