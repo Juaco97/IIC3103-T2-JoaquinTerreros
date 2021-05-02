@@ -144,8 +144,9 @@ def artists():
 
 
 
-@app.route("/artists/<string:artist_id>", methods=['GET'])
+@app.route("/artists/<string:artist_id>", methods=['GET', 'DELETE'])
 def artists_artist_id(artist_id):
+    #Si el método es GET
     if request.method == "GET":
         consulta_por_artista = db.session.query(Artista).filter(Artista.id == artist_id).all()
         #El artista existe
@@ -165,8 +166,36 @@ def artists_artist_id(artist_id):
             respuesta = jsonify({})
             respuesta.status_code = 404
             return respuesta
+    
+    
+    #######################
+    ## ESTO LO HICE YO ####
+    #######################
+    
+    #Si el método es DELETE
+    elif request.method == "DELETE":
+        #Verificamos si el artista existe
+        existe = db.session.query(Artista).filter(Artista.id == artist_id).all()
+        #Si existe, entonces lo tenemos que eliminar
+        if len(existe) > 0:
+            db.session.query(Artista).filter(Artista.id == artist_id).delete()
+            db.session.commit()
+            respuesta = jsonify({})
+            respuesta.status_code = 204
+            return respuesta
+
+        #Si no existe, entonces arrojamos error 404
+        else:
+            respuesta = jsonify({})
+            respuesta.status_code = 404
+            return respuesta
+
+    #######################
+    ## ESTO LO HICE YO ####
+    #######################
+
+    #Si el método no existe
     else:
-        # En caso de que no exista el metodo del request
         respuesta = jsonify({})
         respuesta.status_code = 405
         return respuesta
@@ -427,7 +456,7 @@ def tracks():
 ## ESTO LO HICE YO ####
 # #######################
 
-@app.route("/albums/<string:album_id>", methods=['GET'])
+@app.route("/albums/<string:album_id>", methods=['GET', 'DELETE'])
 def albums_album_id(album_id):
     #En caso de que sí exista el método GET
     if request.method == "GET":
@@ -454,7 +483,24 @@ def albums_album_id(album_id):
             respuesta = jsonify({})
             respuesta.status_code = 404
             return respuesta
-    
+
+    #En caso de que sí exista el método DELETE
+    if request.method == "DELETE":
+        existe = db.session.query(Album).filter(Album.id == album_id).all()
+        #Si existe, entonces lo tenemos que eliminar
+        if len(existe) > 0:
+            db.session.query(Album).filter(Album.id == album_id).delete()
+            db.session.commit()
+            respuesta = jsonify({})
+            respuesta.status_code = 204
+            return respuesta
+
+        #Si no existe, entonces arrojamos error 404
+        else:
+            respuesta = jsonify({})
+            respuesta.status_code = 404
+            return respuesta
+
     #En caso de que no exista el método solicitado
     else:
         respuesta = jsonify({})
@@ -465,7 +511,7 @@ def albums_album_id(album_id):
 
 
 
-@app.route("/tracks/<string:track_id>", methods=['GET'])
+@app.route("/tracks/<string:track_id>", methods=['GET', 'DELETE'])
 def tracks_track_id(track_id):
     #En caso de que sí exista el método GET
     if request.method == "GET":
@@ -493,7 +539,24 @@ def tracks_track_id(track_id):
             respuesta = jsonify({})
             respuesta.status_code = 404
             return respuesta
-    
+
+    #En caso de que sí exista el método DELETE
+    if request.method == "DELETE":
+        existe = db.session.query(Cancion).filter(Cancion.id == track_id).all()
+        #Si existe, entonces lo tenemos que eliminar
+        if len(existe) > 0:
+            db.session.query(Cancion).filter(Cancion.id == track_id).delete()
+            db.session.commit()
+            respuesta = jsonify({})
+            respuesta.status_code = 204
+            return respuesta
+
+        #Si no existe, entonces arrojamos error 404
+        else:
+            respuesta = jsonify({})
+            respuesta.status_code = 404
+            return respuesta    
+
     #En caso de que no exista el método solicitado
     else:
         respuesta = jsonify({})
@@ -588,6 +651,34 @@ def tracks_track_id_play(track_id):
         respuesta.status_code = 405
         return respuesta
 
+
+@app.route("/tracks/<string:track_id>/play", methods=['PUT'])
+def tracks_track_id_play(track_id):
+    #En caso de que sí exista el método PUT
+    if request.method == "PUT":
+        #Verificamos primero si la cancion existe
+        existe = db.session.query(Cancion).filter(Cancion.id == track_id).all()
+        #Si existe, entonces reproducimos su canción
+        if len(existe) > 0:
+            consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
+            for cancion in consulta_canciones:
+                if cancion.id == track_id:
+                    cancion.times_played += 1
+            respuesta = jsonify({})
+            respuesta.status_code = 200
+            return respuesta
+
+        #Si no existe, entonces arrojamos error 404
+        else:
+            respuesta = jsonify({})
+            respuesta.status_code = 404
+            return respuesta
+    
+    #En caso de que no exista el método solicitado
+    else:
+        respuesta = jsonify({})
+        respuesta.status_code = 405
+        return respuesta
 
 #######################
 ## ESTO LO HICE YO ####
