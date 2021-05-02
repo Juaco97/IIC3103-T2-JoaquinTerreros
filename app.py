@@ -571,8 +571,7 @@ def artists_artist_id_albums_play(artist_id):
             for album in consulta_albums:
                 for cancion in consulta_canciones:
                     if cancion.album_id == album.id:
-                        valor_anterior = cancion.times_played + 1
-                        cancion.times_played = valor_anterior
+                        cancion.times_played += 1
                         db.session.commit()
             respuesta = jsonify({})
             respuesta.status_code = 200
@@ -603,6 +602,7 @@ def album_album_id_track_play(album_id):
             for cancion in consulta_canciones:
                 if cancion.album_id == album_id:
                     cancion.times_played += 1
+                    db.session.commit()
             respuesta = jsonify({})
             respuesta.status_code = 200
             return respuesta
@@ -632,6 +632,7 @@ def tracks_track_id_play(track_id):
             for cancion in consulta_canciones:
                 if cancion.id == track_id:
                     cancion.times_played += 1
+                    db.session.commit()
             respuesta = jsonify({})
             respuesta.status_code = 200
             return respuesta
