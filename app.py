@@ -61,16 +61,16 @@ class Cancion(db.Model):
     album = db.Column(db.Text)
     self_ = db.Column("self", db.Text)
 
-    def __init__(self, id, album_id, name, duration, times_played, artist, album, self_):
+    def __init__(self, id, album_id, name, duration, artist, album, self_):
         self.id = id
         self.album_id = album_id
         self.name = name
         self.duration = duration
-        self.times_played = times_played
+        self.times_played = 0
         self.artist = artist
         self.album = album
         self.self_ = self_
-    
+
  
 # Se crean las rutas ligadas al modelo
 @app.route("/artists", methods=['POST', 'GET'])
@@ -354,7 +354,7 @@ def albums_album_id_tracks(album_id):
                     return respuesta
                 #Si no existe la canción, la creo
                 else:
-                    cancion = Cancion(id, album_id, body["name"], body["duration"], 0, f"{os.environ.get('TAREA_URL')}artists/{existe[0].artist_id}", f"{os.environ.get('TAREA_URL')}albums/{album_id}", f"{os.environ.get('TAREA_URL')}tracks/{id}")
+                    cancion = Cancion(id, album_id, body["name"], body["duration"], f"{os.environ.get('TAREA_URL')}artists/{existe[0].artist_id}", f"{os.environ.get('TAREA_URL')}albums/{album_id}", f"{os.environ.get('TAREA_URL')}tracks/{id}")
                     db.session.add(cancion)
                     db.session.commit()
                     respuesta = jsonify({
@@ -434,7 +434,7 @@ def tracks():
                 "album_id": cancion.album_id,
                 "name": cancion.name,
                 "duration": cancion.duration,
-                "times_played": cancion.artist,
+                "times_played": cancion.times_played,
                 "artist": cancion.artist,
                 "album": cancion.album,
                 "self": cancion.self_
@@ -571,7 +571,9 @@ def artists_artist_id_albums_play(artist_id):
             for album in consulta_albums:
                 for cancion in consulta_canciones:
                     if cancion.album_id == album.id:
-                        cancion.times_played += 1
+                        valor_anterior = cancion.times_played + 1
+                        cancion.times_played = valor_anterior
+                        db.session.commit()
             respuesta = jsonify({})
             respuesta.status_code = 200
             return respuesta
