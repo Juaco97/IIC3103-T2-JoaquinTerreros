@@ -85,7 +85,14 @@ def artists():
             # Se ve si existe el artista
             existe = db.session.query(Artista).filter(Artista.id == id).all()   # Para hacer una consulta y retorna una lista
             if len(existe)>0:
-                respuesta = jsonify({})
+                respuesta = jsonify({
+                    "id": artista.id,
+                    "name": artista.name,
+                    "age": artista.age,
+                    "albums": artista.albums,
+                    "tracks": artista.tracks,
+                    "self": artista.self_
+                })
                 respuesta.status_code = 409
                 return respuesta
             # Acá es porque el artista no existe y se debe crear
@@ -182,7 +189,15 @@ def artists_artists_id_albums(artist_id):
                 existe_2 = db.session.query(Album).filter(Album.id == id).all()
                 #Si el album ya existe, entonces arrojo el error
                 if len(existe_2)>0:
-                    respuesta = jsonify({})
+                    respuesta = jsonify({
+                        "id": album.id,
+                        "artist_id": artist_id,
+                        "name": album.name,
+                        "genre": album.genre,
+                        "artist": album.artist,
+                        "tracks": album.tracks,
+                        "self": album.self_
+                    })
                     respuesta.status_code = 422
                     return respuesta
                 #Si el album no existe, la creo y la muestro
@@ -262,7 +277,16 @@ def albums_album_id_tracks(album_id):
                 existe_2 = db.session.query(Cancion).filter(Cancion.id == id).all()
                 #Si existe la canción, arrojo el error
                 if len(existe_2)>0:
-                    respuesta = jsonify({})
+                    respuesta = jsonify({
+                        "id": cancion.id,
+                        "album_id": album_id,
+                        "name": cancion.name,
+                        "duration": cancion.duration,
+                        "times_played": 0,
+                        "artist": cancion.artist,
+                        "album": cancion.album,
+                        "self": cancion.self_
+                    })
                     respuesta.status_code = 409
                     return respuesta
                 #Si no existe la canción, la creo
