@@ -231,7 +231,7 @@ def artists_artists_id_albums(artist_id):
                     return respuesta
                 #Si el album no existe, la creo y la muestro
                 else:
-                    album = Album(id, artist_id, body["name"], body["genre"], f"{os.environ.get('TAREA_URL')}artists/{id}", f"{os.environ.get('TAREA_URL')}albums/{id}/tracks", f"{os.environ.get('TAREA_URL')}albums/{id}")
+                    album = Album(id, artist_id, body["name"], body["genre"], f"{os.environ.get('TAREA_URL')}artists/{artist_id}", f"{os.environ.get('TAREA_URL')}albums/{id}/tracks", f"{os.environ.get('TAREA_URL')}albums/{id}")
                     db.session.add(album)
                     db.session.commit()
                     respuesta = jsonify({
@@ -396,8 +396,8 @@ def albums_album_id_tracks(album_id):
                         "id": cancion.id,
                         "album_id": cancion.album_id,
                         "name": cancion.name,
-                        "duration": cancion.duration,
-                        "times_played": cancion.artist,
+                        "duration":  cancion.duration,
+                        "times_played": cancion.times_played,
                         "artist": cancion.artist,
                         "album": cancion.album,
                         "self": cancion.self_
