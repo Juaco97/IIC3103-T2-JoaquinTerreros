@@ -396,7 +396,7 @@ def albums_album_id_tracks(album_id):
                         "id": cancion.id,
                         "album_id": cancion.album_id,
                         "name": cancion.name,
-                        "duration":  cancion.duration,
+                        "duration": cancion.duration,
                         "times_played": cancion.times_played,
                         "artist": cancion.artist,
                         "album": cancion.album,
@@ -462,16 +462,15 @@ def albums_album_id(album_id):
         consulta_albums = db.session.query(Album).filter(Album.id == album_id).all()
         #Si existe el album buscado
         if len(consulta_albums)>0:
-            respuesta = []
-            respuesta.append({
+            respuesta = {
                 "id": consulta_albums[0].id,
                 "artist_id": consulta_albums[0].artist_id,
-                "name": consulta_albums[0].name,
+                "name": consulta_albums[0].named
                 "genre": consulta_albums[0].genre,
                 "artist": consulta_albums[0].artist,
                 "tracks": consulta_albums[0].tracks,
                 "self": consulta_albums[0].self_
-                })
+                }
             estatus = jsonify(respuesta)
             estatus.status_code = 200
             return estatus
@@ -514,8 +513,7 @@ def tracks_track_id(track_id):
         for cancion in consulta_canciones:
             #Si existe el album buscado
             if cancion.id == track_id:
-                respuesta = []
-                respuesta.append({
+                respuesta = {
                     "id": cancion.id,
                     "album_id": cancion.album_id,
                     "name": cancion.name,
@@ -524,7 +522,7 @@ def tracks_track_id(track_id):
                     "artist": cancion.artist,
                     "album": cancion.album,
                     "self": cancion.self_
-                    })
+                    }
                 estatus = jsonify(respuesta)
                 estatus.status_code = 200
                 return estatus
