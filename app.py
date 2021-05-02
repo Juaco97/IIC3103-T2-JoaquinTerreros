@@ -86,12 +86,12 @@ def artists():
             existe = db.session.query(Artista).filter(Artista.id == id).all()   # Para hacer una consulta y retorna una lista
             if len(existe)>0:
                 respuesta = jsonify({
-                    "id": artista.id,
-                    "name": artista.name,
-                    "age": artista.age,
-                    "albums": artista.albums,
-                    "tracks": artista.tracks,
-                    "self": artista.self_
+                    "id": existe[0].id,
+                    "name": existe[0].name,
+                    "age": existe[0].age,
+                    "albums": existe[0].albums,
+                    "tracks": existe[0].tracks,
+                    "self": existe[0].self_
                 })
                 respuesta.status_code = 409
                 return respuesta
