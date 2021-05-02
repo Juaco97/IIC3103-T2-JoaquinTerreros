@@ -190,13 +190,13 @@ def artists_artists_id_albums(artist_id):
                 #Si el album ya existe, entonces arrojo el error
                 if len(existe_2)>0:
                     respuesta = jsonify({
-                        "id": album.id,
+                        "id": existe_2[0].id,
                         "artist_id": artist_id,
-                        "name": album.name,
-                        "genre": album.genre,
-                        "artist": album.artist,
-                        "tracks": album.tracks,
-                        "self": album.self_
+                        "name": existe_2[0].name,
+                        "genre": existe_2[0].genre,
+                        "artist": existe_2[0].artist,
+                        "tracks": existe_2[0].tracks,
+                        "self": existe_2[0].self_
                     })
                     respuesta.status_code = 409
                     return respuesta
@@ -278,14 +278,14 @@ def albums_album_id_tracks(album_id):
                 #Si existe la canción, arrojo el error
                 if len(existe_2)>0:
                     respuesta = jsonify({
-                        "id": cancion.id,
+                        "id": existe_2[0].id,
                         "album_id": album_id,
-                        "name": cancion.name,
-                        "duration": cancion.duration,
-                        "times_played": 0,
-                        "artist": cancion.artist,
-                        "album": cancion.album,
-                        "self": cancion.self_
+                        "name": existe_2[0].name,
+                        "duration": existe_2[0].duration,
+                        "times_played": existe_2[0].times_played,
+                        "artist": existe_2[0].artist,
+                        "album": existe_2[0].album,
+                        "self": existe_2[0].self_
                     })
                     respuesta.status_code = 409
                     return respuesta
