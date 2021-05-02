@@ -539,7 +539,7 @@ def album_album_id_track_play(album_id):
         existe = db.session.query(Album).filter(Album.id == album_id).all()
         #Si existe, entonces reproducimos su canción
         if len(existe) > 0:
-            consulta_canciones = db.session.query(Canciones).all() #Todas las canciones de la base de datos
+            consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
             for cancion in consulta_canciones:
                 if cancion.album_id == album_id:
                     cancion.times_played += 1
@@ -568,7 +568,7 @@ def tracks_track_id_play(track_id):
         existe = db.session.query(Cancion).filter(Cancion.id == track_id).all()
         #Si existe, entonces reproducimos su canción
         if len(existe) > 0:
-            consulta_canciones = db.session.query(Canciones).all() #Todas las canciones de la base de datos
+            consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
             for cancion in consulta_canciones:
                 if cancion.id == track_id:
                     cancion.times_played += 1
