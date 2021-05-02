@@ -509,7 +509,7 @@ def artists_artist_id_albums_play(artist_id):
         #Si existe, entonces reproducimos su canción
         if len(existe) > 0:
             consulta_albums = db.session.query(Album).filter(Album.artist_id == artist_id).all() #Todos los albums del artista
-            consulta_canciones = db.session.query(Canciones).all() #Todas las canciones de la base de datos
+            consulta_canciones = db.session.query(Cancion).all() #Todas las canciones de la base de datos
             for album in consulta_albums:
                 for cancion in consulta_canciones:
                     if cancion.album_id == album.id:
