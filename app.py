@@ -178,7 +178,7 @@ def artists_artist_id(artist_id):
         existe = db.session.query(Artista).filter(Artista.id == artist_id).all()
         #Si existe, entonces lo tenemos que eliminar
         if len(existe) > 0:
-            db.session.query(Artista).filter(Artista.id == artist_id).delete()
+            db.session.delete(existe[0])
             db.session.commit()
             respuesta = jsonify({})
             respuesta.status_code = 204
@@ -489,7 +489,7 @@ def albums_album_id(album_id):
         existe = db.session.query(Album).filter(Album.id == album_id).all()
         #Si existe, entonces lo tenemos que eliminar
         if len(existe) > 0:
-            db.session.query(Album).filter(Album.id == album_id).delete()
+            db.session.delete(existe[0])
             db.session.commit()
             respuesta = jsonify({})
             respuesta.status_code = 204
@@ -545,7 +545,7 @@ def tracks_track_id(track_id):
         existe = db.session.query(Cancion).filter(Cancion.id == track_id).all()
         #Si existe, entonces lo tenemos que eliminar
         if len(existe) > 0:
-            db.session.query(Cancion).filter(Cancion.id == track_id).delete()
+            db.session.delete(existe[0])
             db.session.commit()
             respuesta = jsonify({})
             respuesta.status_code = 204
