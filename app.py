@@ -465,7 +465,7 @@ def albums_album_id(album_id):
             respuesta = {
                 "id": consulta_albums[0].id,
                 "artist_id": consulta_albums[0].artist_id,
-                "name": consulta_albums[0].named
+                "name": consulta_albums[0].name,
                 "genre": consulta_albums[0].genre,
                 "artist": consulta_albums[0].artist,
                 "tracks": consulta_albums[0].tracks,
